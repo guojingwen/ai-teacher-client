@@ -10,9 +10,17 @@ import { getInputState, switchInput } from '../store/inputSlice';
 import { useState } from 'react';
 import { getUserState } from '../store/userSlice';
 import events from '../utils/event';
-import { fetchChat } from '../api/chat';
 
-export default function WelFooterInputcome() {
+type Props = {
+  submit: (prompt: string) => void;
+  prompt: string;
+  setPrompt: (prompt: string) => void;
+};
+export default function WelFooterInputcome({
+  submit,
+  prompt,
+  setPrompt,
+}: Props) {
   const inputState = useSelector(getInputState);
   const userState = useSelector(getUserState);
   const dispatch = useDispatch();
@@ -43,18 +51,17 @@ export default function WelFooterInputcome() {
     if (!userState.isLogin) {
       // evt.preventDefault();
       // events.emit('needLogin');
+      console.log(events);
     }
   };
-  const [prompt, setPrompt] = useState('');
   const onKeyDown = (evt: React.KeyboardEvent<HTMLInputElement>) => {
     if (evt.keyCode === 13 && !evt.shiftKey) {
       evt.preventDefault();
-      onSubmit();
+      submit(prompt);
     }
   };
   const onSubmit = () => {
-    console.log('发送消息');
-    fetchChat(prompt).then(console.log);
+    submit(prompt);
   };
   const [isRecording, setIsRecording] = useState(false);
   const start = async () => {
@@ -113,7 +120,7 @@ export default function WelFooterInputcome() {
               value={prompt}
               onKeyDown={(evt) => onKeyDown(evt)}
               onChange={setPrompt}></Input>
-            <IconSend />
+            <IconSend onClick={onSubmit} />
           </>
         )}
       </div>
