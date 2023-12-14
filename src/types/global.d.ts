@@ -3,4 +3,11 @@ declare interface Window {
   _voiceOpened: boolean;
   needTokenFn: Function | null;
   needOpenVoice: Function | null;
+  wx: Wx;
+  wxPromise: Promise<any>;
+  isVoiceGrantPrivilege: boolean;
+}
+
+declare interface Wx {
+  [key: string]: any;
 }

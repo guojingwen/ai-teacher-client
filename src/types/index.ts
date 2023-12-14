@@ -1,3 +1,5 @@
+import { ToObj } from './func';
+
 export type Role = 'user' | 'assistant' | 'system';
 export type AudioState = 'loading' | 'playing' | 'done';
 export type Message = {
@@ -9,9 +11,7 @@ export type Message = {
   audioState?: AudioState;
   audioBase64?: string; // ios 浏览器不支持自动播放音频的hack的方案
 };
-export type ToObj<T extends object> = {
-  [P in keyof T]: T[P];
-};
+
 export type MessageAndIndex = ToObj<Message & { index?: number }>;
 
 export type SendMessage = Omit<

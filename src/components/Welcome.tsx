@@ -19,7 +19,7 @@ export default function Welcome() {
   const lists = [
     [
       { text: '写一篇科幻小说' },
-      { text: '写一首歌赞美春天的是个' },
+      { text: '写一条给女友的短信' },
       { text: '安排一场发布会流程' },
     ],
     [
