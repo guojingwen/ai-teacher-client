@@ -2,17 +2,17 @@ export default function Welcome() {
   const kinds = [
     {
       id: 1,
-      icon: 'http://localhost:8080/imgs/create.svg',
+      icon: '/imgs/create.svg',
       name: 'AI 创作',
     },
     {
       id: 2,
-      icon: 'http://localhost:8080/imgs/study.svg',
+      icon: '/imgs/study.svg',
       name: 'AI 学习',
     },
     {
       id: 3,
-      icon: 'http://localhost:8080/imgs/baike.svg',
+      icon: '/imgs/baike.svg',
       name: 'AI 百科',
     },
   ];
@@ -74,7 +74,7 @@ export default function Welcome() {
                   height='14'
                   xmlns='http://www.w3.org/2000/svg'>
                   <image
-                    href='http://localhost:8080/imgs/arrow.svg'
+                    href='/imgs/arrow.svg'
                     width='14'
                     height='14'
                   />

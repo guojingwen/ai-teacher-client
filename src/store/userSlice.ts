@@ -7,7 +7,7 @@ const defaultData: ResUserInfo | ResUserNotLogin = { isLogin: false };
 const userSlice = createSlice({
   name: 'user',
   initialState: {
-    value: defaultData,
+    value: defaultData as ResUserInfo | ResUserNotLogin,
   },
   reducers: {
     login: (state, action) => {

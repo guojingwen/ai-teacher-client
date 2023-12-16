@@ -58,6 +58,9 @@ export interface SpeechTextParams {
   voice: VoiceType;
   input: string;
 }
+export interface ResSpeechText {
+  audioBase64: string;
+}
 export async function fetchSpeechText(input: string) {
   const params: SpeechTextParams = {
     model: 'tts-1',
@@ -71,7 +74,7 @@ export async function fetchSpeechText(input: string) {
     },
     body: JSON.stringify(params),
   }).then((res) => res.json());
-  return res as { audioBase64: string };
+  return res as ResSpeechText;
 }
 
 export interface ResWxUpload {
@@ -93,5 +96,5 @@ export async function fetchSpeechText2(input: string) {
     },
     body: JSON.stringify(params),
   }).then((res) => res.json());
-  return res as ResWxUpload;
+  return res as ResWxUpload | ResSpeechText;
 }

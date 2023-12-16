@@ -28,6 +28,7 @@ export default function WelFooterInputcome({
     window.isVoiceGrantPrivilege
   );
   const toSwitch = async function () {
+    if (!isWxSdkReady) return;
     // 切到声音，未开启音频
     if (!inputState.isVoice && !window.isVoiceGrantPrivilege) {
       await new Promise((resolve) => {
@@ -61,6 +62,7 @@ export default function WelFooterInputcome({
     }
   };
   const onSubmit = () => {
+    if (!isWxSdkReady) return;
     submit(prompt);
   };
   /* 语音功能相关 */
@@ -110,12 +112,22 @@ export default function WelFooterInputcome({
     });
   }
 
+  const [isWxSdkReady, setWxSdkReady] = useState(false);
+  useEffect(() => {
+    window.wxPromise.then(setWxSdkReady);
+  }, []);
   return (
     <div className='flex w-full pl-2 pr-4 py-4 items-center relative'>
       <div
         className='inline-flex items-center justify-center active:bg-gray-200 h-10 w-10 rounded-xl mr-1'
         onClick={toSwitch}>
-        {inputState.isVoice ? <IconKeyboard /> : <IconMicrophone />}
+        {inputState.isVoice ? (
+          <IconKeyboard />
+        ) : (
+          <IconMicrophone
+            style={{ color: isWxSdkReady ? '#000' : '#aaa' }}
+          />
+        )}
       </div>
       <span
         className='absolute text-base'
@@ -157,7 +169,10 @@ export default function WelFooterInputcome({
               value={prompt}
               onKeyDown={(evt) => onKeyDown(evt)}
               onChange={setPrompt}></Input>
-            <IconSend onClick={onSubmit} />
+            <IconSend
+              onClick={onSubmit}
+              style={{ color: isWxSdkReady ? '#000' : '#aaa' }}
+            />
           </>
         )}
       </div>

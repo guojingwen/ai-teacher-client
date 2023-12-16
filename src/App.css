@@ -25,6 +25,7 @@ body {
 @tailwind components;
 @tailwind utilities;
 
+/* and-design 样式 */
 :root {
   /* --adm-center-popup-background-color: white; */
   /* --border-radius: 0.2rem; */

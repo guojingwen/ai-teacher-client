@@ -14,9 +14,18 @@ import {
 } from '@/types';
 import { useGetState } from '@/utils/hooks';
 import { getInputState } from '@/store/inputSlice';
-import { fetchSpeechText, fetchSpeechText2 } from '@/api/chat';
+import {
+  ResSpeechText,
+  ResWxUpload,
+  fetchSpeechText,
+  fetchSpeechText2,
+} from '@/api/chat';
 import { audioInst } from '@/utils/utils';
 import device from '@/utils/device';
+import { IconUser } from '@tabler/icons-react';
+import clsx from 'clsx';
+import MessageContent from '@/components/MessageContent';
+import { ResUserInfo } from '@/api/apiType';
 
 export default function Home() {
   chatService.actions = {
@@ -26,15 +35,19 @@ export default function Home() {
       if (inputState.isVoice) {
         if (device.isAndroid) {
           fetchSpeechText(sug).then(
-            ({ audioBase64 }: { audioBase64: string }) => {
+            ({ audioBase64 }: ResSpeechText) => {
               audioInst.play(audioBase64);
             }
           );
         } else {
           fetchSpeechText2(sug).then((res) => {
-            const { media_id } = res;
+            const { media_id } = res as ResWxUpload;
             if (media_id) {
               playVoice(media_id);
+            } else {
+              const { audioBase64 } = res as ResSpeechText;
+              console.log(audioBase64);
+              alert('音频>60s 走降级方案');
             }
           });
         }
@@ -72,7 +85,6 @@ export default function Home() {
 
   const setSuggestion = (suggestion: string) => {
     if (suggestion === '') return;
-    console.log(suggestion);
     const len = messages.length;
     const lastMsg = messages[len - 1];
     let newList: MessageList = [];
@@ -89,12 +101,13 @@ export default function Home() {
         audioState: 'loading',
         content: suggestion,
       };
+      newList = [...messages, newMsg];
       // messageStore.addMessage(newMsg);
     }
     // scrollRef.current!.scrollTop += 200;
     setMessageList(newList);
   };
-  const user = useSelector(getUserState);
+  const user = useSelector(getUserState) as ResUserInfo;
   const onSubmit = (_prompt: string) => {
     const newPrompt = prompt.trim() || _prompt;
     if (!newPrompt) return;
@@ -146,14 +159,65 @@ export default function Home() {
       },
     });
   };
+  const toSpeak = async (item: Message, i: number) => {
+    console.log('---toSpeak', item, i);
+  };
   return (
     <div className='h-full w-full flex flex-col justify-between'>
       {!user.isLogin ? (
         <Welcome />
       ) : (
-        <div>
+        <>
           <NavHeader></NavHeader>
-        </div>
+          <div className='flex-col h-full flex-1 overflow-y-auto items-start'>
+            {messages.map((item, idx) => {
+              const isUser = item.role === 'user';
+              return (
+                <div
+                  key={`${item.role}-${idx}`}
+                  className='pt-4 pb-4 px-4'
+                  style={{
+                    backgroundColor: isUser ? '#fff' : '#f3f3f3',
+                  }}>
+                  <div className='flex flex-row'>
+                    <div
+                      className={clsx(
+                        'flex-none',
+                        'mr-3',
+                        'rounded-full',
+                        'h-8',
+                        'w-8',
+                        'flex',
+                        'justify-center',
+                        'items-center',
+                        'overflow-hidden'
+                      )}>
+                      {!isUser ? (
+                        <img
+                          alt='ai'
+                          src='/imgs/ai-3.5.jpeg'
+                          className='w-8 rounded-full'
+                        />
+                      ) : user.headimgurl ? (
+                        <img alt='you' src={user.headimgurl} />
+                      ) : (
+                        <IconUser color='#333' size={20} />
+                      )}
+                    </div>
+                    <MessageContent
+                      index={idx}
+                      message={item}
+                      toSpeak={toSpeak}
+                      showWriting={
+                        idx === messages.length - 1 && loading
+                      }
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </>
       )}
       {/* <button onClick={() => playVoice()}>playVoice</button> */}
 

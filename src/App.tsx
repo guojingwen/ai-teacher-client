@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import './app.css';
+import 'highlight.js/styles/atom-one-dark.css';
 import { checkLogin } from './api/user';
 import { fetchWxAuth, fetchWxJsSdk } from './api/wx';
 import { MyResponse, ResUserInfo, WxSign } from './api/apiType';
@@ -14,12 +15,14 @@ import { getUrlParams } from './utils/utils';
 let config: WxSign | null = null;
 function App(props: any) {
   const dispatch = useDispatch();
+  const [isReady, setIsReady] = useState(false);
   useEffect(() => {
     const params = getUrlParams(window.location.search);
     const { code } = params;
     if (code) {
       window.history.replaceState(null, '', '/');
       fetchWxAuth(code).then((res) => {
+        setIsReady(true);
         const { data } = res as MyResponse<ResUserInfo>;
         if (data?.isLogin) {
           dispatch(login(data));
@@ -34,6 +37,7 @@ function App(props: any) {
         if (data.isLogin) {
           dispatch(login(data));
         }
+        setIsReady(true);
       });
     }
     window.wxPromise = fetchWxJsSdk().then((res) => {
@@ -61,7 +65,7 @@ function App(props: any) {
       return new Promise((resolve) => {
         window.wx.ready(function () {
           //需在用户可能点击分享按钮前就先调用
-          resolve(null);
+          resolve(true);
         });
       });
     });
@@ -90,6 +94,9 @@ function App(props: any) {
         window.location.href = targetUrl;
       },
     });
+  }
+  if (!isReady) {
+    return <div className='h-full w-full app-loader' />;
   }
   return <div className='app'>{props.children}</div>;
 }
