@@ -13,19 +13,36 @@ import {
   Session,
 } from '@/types';
 import { useGetState } from '@/utils/hooks';
+import { getInputState } from '@/store/inputSlice';
+import { fetchSpeechText, fetchSpeechText2 } from '@/api/chat';
+import { audioInst } from '@/utils/utils';
+import device from '@/utils/device';
 
 export default function Home() {
   chatService.actions = {
     onCompleting: (sug) => setSuggestion(sug),
     onCompleted: (sug: string) => {
       console.log('---onCompleted', sug);
-      setLoading(false);
-      // if (getMode() === 'text') {
-      //   setLoading(false);
-      // } else {
-      //   _resolve?.(sug);
-      //   setLoading(false);
-      // }
+      if (inputState.isVoice) {
+        if (device.isAndroid) {
+          fetchSpeechText(sug).then(
+            ({ audioBase64 }: { audioBase64: string }) => {
+              audioInst.play(audioBase64);
+            }
+          );
+        } else {
+          fetchSpeechText2(sug).then((res) => {
+            const { media_id } = res;
+            if (media_id) {
+              playVoice(media_id);
+            }
+          });
+        }
+
+        setLoading(false);
+      } else {
+        setLoading(false);
+      }
     },
   };
   const session: Session = {
@@ -51,6 +68,8 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [messages, setMessageList, getMessageList] =
     useGetState<MessageList>([]);
+  const inputState = useSelector(getInputState);
+
   const setSuggestion = (suggestion: string) => {
     if (suggestion === '') return;
     console.log(suggestion);
@@ -112,6 +131,21 @@ export default function Home() {
     });
     setPrompt('');
   };
+  const playVoice = (serverId: string) => {
+    window.wx.downloadVoice({
+      serverId,
+      isShowProgressTips: 0, // 默认为1，显示进度提示
+      success: function (res: any) {
+        var localId = res.localId; // 返回音频的本地ID
+        window.wx.playVoice({
+          localId,
+        });
+      },
+      error() {
+        alert('下载失败');
+      },
+    });
+  };
   return (
     <div className='h-full w-full flex flex-col justify-between'>
       {!user.isLogin ? (
@@ -121,6 +155,8 @@ export default function Home() {
           <NavHeader></NavHeader>
         </div>
       )}
+      {/* <button onClick={() => playVoice()}>playVoice</button> */}
+
       <FooterInput
         prompt={prompt}
         setPrompt={setPrompt}

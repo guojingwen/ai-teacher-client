@@ -45,29 +45,53 @@ function Uint8ArrayToString(fileData: Uint8Array) {
   return dataString;
 }
 
-export async function fetchChat2(prompt: string) {
-  return new Promise((resolve) => {
-    const source = new EventSource('/api/stream', {
-      withCredentials: false,
-    });
-    source.onopen = function (event) {
-      // ...
-      console.log('sse open', event);
-    };
-    source.onmessage = function (event) {
-      var data = event.data;
-      var origin = event.origin;
-      var lastEventId = event.lastEventId;
-      // handle message
-      console.log(data, origin, lastEventId);
-    };
-    source.onerror = function (event) {
-      // 客户端没有onclose方法， 服务端关闭会触发 onerror方法
-      console.log('sse onerror', event);
-    };
-    // source.onclose = function (event) {
-    //   // ...
-    //   console.log('sse onclose', event);
-    // };
-  });
+export type WoiceModel = 'tts-1' | 'tts-1-hd';
+export type VoiceType =
+  | 'alloy'
+  | 'echo'
+  | 'fable'
+  | 'onyx'
+  | 'nova'
+  | 'shimmer';
+export interface SpeechTextParams {
+  model: WoiceModel;
+  voice: VoiceType;
+  input: string;
+}
+export async function fetchSpeechText(input: string) {
+  const params: SpeechTextParams = {
+    model: 'tts-1',
+    voice: 'alloy',
+    input,
+  };
+  const res = await fetch('/api/openai/speechToText', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(params),
+  }).then((res) => res.json());
+  return res as { audioBase64: string };
+}
+
+export interface ResWxUpload {
+  type: 'voice';
+  media_id: string;
+  created_at: number;
+  item: any[];
+}
+export async function fetchSpeechText2(input: string) {
+  const params: SpeechTextParams = {
+    model: 'tts-1',
+    voice: 'alloy',
+    input,
+  };
+  const res = await fetch('/api/openai/speechToText2', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(params),
+  }).then((res) => res.json());
+  return res as ResWxUpload;
 }

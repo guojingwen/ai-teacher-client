@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="file" onchange="sumbit(event)" />
+    <script>
+      async function sumbit(e) {
+        const file = e.target.files[0];
+        console.log(e.target.files);
+        const base = 'https://api.weixin.qq.com/cgi-bin/media/upload';
+        const access_token =
+          '75_xHcQlnVZOqoxC1IhfROnqttFre08n6wpFMYrSm046RKfNbTydtIdwTQmiUPhXJk1lvwJeBI3cYRYhnIuji32aZbqRbR72EmADsNeu3jfnpT5ShUISixFWZdo2ugPGEhACAARP';
+        const form = new FormData();
+        form.append('test.mp3', file);
+        fetch(`${base}?access_token=${access_token}&type=voice `, {
+          headers: {
+            'Access-Control-Allow-Origin': '*', // 设置允许跨域访问的域名，可以是具体的域名或通配符*
+          },
+          method: 'POST',
+          body: new FormData(),
+          mode: 'cors',
+        })
+          .then((res) => res.json())
+          .then((res) => {
+            console.log('xxxx', res);
+          });
+      }
+    </script>
+  </body>
+</html>

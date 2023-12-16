@@ -52,8 +52,9 @@ function App(props: any) {
           'playVoice',
           'stopVoice',
           'downloadVoice',
-          'scanQRCode',
-          'chooseImage',
+          'pauseVoice',
+          'uploadVoice',
+          'translateVoice',
         ], // 必填，需要使用的JS接口列表
       };
       window.wx.config(_config);

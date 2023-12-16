@@ -18,3 +18,15 @@ export async function fetchWxJsSdk() {
   );
   return res as WxSign;
 }
+
+export async function fetchWxVoiceToText(
+  voice_id: string,
+  lang: 'zh_CN' | 'en_US'
+) {
+  const res = await fetch(
+    `/api/wx/voiceToText?voice_id=${encodeURIComponent(
+      voice_id
+    )}&lang=${lang}`
+  ).then((res) => res.json());
+  return res;
+}
