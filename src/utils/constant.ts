@@ -56,3 +56,8 @@ export const ASSISTANT_MODE = [
 export const API_KEY = 'ai_api_key';
 export const ASSISTANT_ID = 'assistant_id';
 export const EMPTY_SESSION_ID = 'empty_session_id';
+
+export const BASE_URL =
+  process.env.NODE_ENV === 'production'
+    ? 'https://ai-teacher.warmplace.cn'
+    : '';

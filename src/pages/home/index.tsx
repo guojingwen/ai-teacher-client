@@ -26,6 +26,7 @@ import { IconUser } from '@tabler/icons-react';
 import clsx from 'clsx';
 import MessageContent from '@/components/MessageContent';
 import { ResUserInfo } from '@/api/apiType';
+import { BASE_URL } from '@/utils/constant';
 
 export default function Home() {
   chatService.actions = {
@@ -195,7 +196,7 @@ export default function Home() {
                       {!isUser ? (
                         <img
                           alt='ai'
-                          src='/imgs/ai-3.5.jpeg'
+                          src={`${BASE_URL}/imgs/ai-3.5.jpeg`}
                           className='w-8 rounded-full'
                         />
                       ) : user.headimgurl ? (

@@ -1,18 +1,19 @@
+import { BASE_URL } from '@/utils/constant';
 export default function Welcome() {
   const kinds = [
     {
       id: 1,
-      icon: '/imgs/create.svg',
+      icon: `${BASE_URL}/imgs/create.svg`,
       name: 'AI 创作',
     },
     {
       id: 2,
-      icon: '/imgs/study.svg',
+      icon: `${BASE_URL}/imgs/study.svg`,
       name: 'AI 学习',
     },
     {
       id: 3,
-      icon: '/imgs/baike.svg',
+      icon: `${BASE_URL}/imgs/baike.svg`,
       name: 'AI 百科',
     },
   ];
