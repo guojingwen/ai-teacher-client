@@ -49,9 +49,9 @@ export default function WelFooterInputcome({
   const onFocus = function (evt: any) {
     console.log('onFocus', userState.isLogin);
     if (!userState.isLogin) {
-      // evt.preventDefault();
-      // events.emit('needLogin');
-      console.log(events);
+      evt.preventDefault();
+      evt.currentTarget.blur();
+      events.emit('needLogin');
     }
   };
   const onKeyDown = (evt: React.KeyboardEvent<HTMLInputElement>) => {
@@ -66,6 +66,10 @@ export default function WelFooterInputcome({
   /* 语音功能相关 */
   const [isRecording, setIsRecording] = useState(false);
   const start = async () => {
+    if (!userState.isLogin) {
+      events.emit('needLogin');
+      return;
+    }
     setIsRecording(true);
     window.wx.startRecord();
   };
