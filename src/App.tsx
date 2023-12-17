@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import './app.css';
+import './app2.css';
 import 'highlight.js/styles/atom-one-dark.css';
 import { checkLogin } from './api/user';
 import { fetchWxAuth, fetchWxJsSdk } from './api/wx';
@@ -73,6 +73,7 @@ function App(props: any) {
     return () => {
       events.off('needLogin');
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   function toCheckLogin() {
     // e.stopPropagation();

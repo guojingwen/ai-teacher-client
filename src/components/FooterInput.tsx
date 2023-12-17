@@ -38,7 +38,9 @@ export default function WelFooterInputcome({
               window.isVoiceGrantPrivilege = true;
               setIsGranted(true);
               // Toast.show('已开启音频权限');
-              window.wx.stopRecord();
+              setTimeout(() => {
+                window.wx.stopRecord();
+              }, 50);
               resolve(null);
             }
           },
@@ -48,7 +50,6 @@ export default function WelFooterInputcome({
     dispatch(switchInput());
   };
   const onFocus = function (evt: any) {
-    console.log('onFocus', userState.isLogin);
     if (!userState.isLogin) {
       evt.preventDefault();
       evt.currentTarget.blur();

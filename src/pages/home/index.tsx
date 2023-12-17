@@ -4,7 +4,7 @@ import { getUserState } from '../../store/userSlice';
 import { useSelector } from 'react-redux';
 import NavHeader from '../../components/NavHeader';
 import chatService from '@/utils/chatService';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   Assistant,
   Message,
@@ -83,6 +83,7 @@ export default function Home() {
   const [messages, setMessageList, getMessageList] =
     useGetState<MessageList>([]);
   const inputState = useSelector(getInputState);
+  const scrollRef = useRef<HTMLDivElement>();
 
   const setSuggestion = (suggestion: string) => {
     if (suggestion === '') return;
@@ -105,7 +106,7 @@ export default function Home() {
       newList = [...messages, newMsg];
       // messageStore.addMessage(newMsg);
     }
-    // scrollRef.current!.scrollTop += 200;
+    scrollRef.current!.scrollTop += 200;
     setMessageList(newList);
   };
   const user = useSelector(getUserState) as ResUserInfo;
@@ -129,9 +130,9 @@ export default function Home() {
     setLoading(true);
     setMessageList(list);
     // requestIdleCallback safari不兼容
-    // setTimeout(() => {
-    //   scrollRef.current!.scrollTop += 200;
-    // }, 100);
+    setTimeout(() => {
+      scrollRef.current!.scrollTop += 200;
+    }, 100);
     chatService.getStream({
       prompt,
       history: list.slice(-assistant!.max_log).map((it) => {
@@ -162,6 +163,8 @@ export default function Home() {
   };
   const toSpeak = async (item: Message, i: number) => {
     console.log('---toSpeak', item, i);
+    const { audioBase64 } = await fetchSpeechText(item.content);
+    audioInst.play(audioBase64);
   };
   return (
     <div className='h-full w-full flex flex-col justify-between'>
@@ -170,7 +173,9 @@ export default function Home() {
       ) : (
         <>
           <NavHeader></NavHeader>
-          <div className='flex-col h-full flex-1 overflow-y-auto items-start'>
+          <div
+            className='flex-col h-full flex-1 overflow-y-auto items-start'
+            ref={(_ref) => (scrollRef.current = _ref!)}>
             {messages.map((item, idx) => {
               const isUser = item.role === 'user';
               return (
@@ -196,7 +201,7 @@ export default function Home() {
                       {!isUser ? (
                         <img
                           alt='ai'
-                          src={`${BASE_URL}/imgs/ai-3.5.jpeg`}
+                          src={`${BASE_URL}/imgs/ai-3.5.png`}
                           className='w-8 rounded-full'
                         />
                       ) : user.headimgurl ? (

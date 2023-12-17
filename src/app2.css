@@ -1,3 +1,5 @@
+/* stylelint-disable */
+
 html,
 body {
   width: 100%;
@@ -17,8 +19,9 @@ body {
   height: 100%;
   font-size: 0.8rem;
 }
+
 * {
-  user-select: none;
+  user-select: text;
 }
 
 @tailwind base;
@@ -28,23 +31,21 @@ body {
 /* and-design 样式 */
 :root {
   /* --adm-center-popup-background-color: white; */
+
   /* --border-radius: 0.2rem; */
   --adm-color-primary: #1677ff;
   --adm-color-success: #00b578;
   --adm-color-warning: #ff8f1f;
   --adm-color-danger: #ff3141;
-
-  --adm-color-white: #ffffff;
-  --adm-color-text: #333333;
-  --adm-color-text-secondary: #666666;
-  --adm-color-weak: #999999;
-  --adm-color-light: #cccccc;
-  --adm-color-border: #eeeeee;
+  --adm-color-white: #fff;
+  --adm-color-text: #333;
+  --adm-color-text-secondary: #666;
+  --adm-color-weak: #999;
+  --adm-color-light: #ccc;
+  --adm-color-border: #eee;
   --adm-color-box: #f5f5f5;
-  --adm-color-background: #ffffff;
-
+  --adm-color-background: #fff;
   --adm-font-size-main: var(--adm-font-size-5);
-
   --adm-font-family: -apple-system, blinkmacsystemfont,
     'Helvetica Neue', helvetica, segoe ui, arial, roboto,
     'PingFang SC', 'miui', 'Hiragino Sans GB', 'Microsoft Yahei',
