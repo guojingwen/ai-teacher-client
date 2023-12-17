@@ -61,3 +61,7 @@ export const BASE_URL =
   process.env.NODE_ENV === 'production'
     ? 'https://ai-teacher.warmplace.cn'
     : '';
+export const BASE =
+  process.env.NODE_ENV === 'development'
+    ? 'https://static.warmplace.cn'
+    : '';

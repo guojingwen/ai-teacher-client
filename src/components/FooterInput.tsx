@@ -139,6 +139,7 @@ export default function WelFooterInputcome({
           transform: 'translateX(calc(-50% + 0.8rem))',
           letterSpacing: '0.2rem',
           color: 'green',
+          userSelect: 'none',
         }}>
         松开发送
       </span>
